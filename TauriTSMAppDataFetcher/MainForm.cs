@@ -40,10 +40,8 @@ namespace TauriTSMAppDataFetcher
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             FetchAppData();
-
-            // TODO uncomment once the webservice is deployed
-            timerCheckPrices.Enabled = false;
-            // PriceTrackerUtils.PriceTrackerRequest();
+            
+            PriceTrackerUtils.PriceTrackerRequest();
         }
 
         private void TrayPriceAlerts(object sender, EventArgs e)
@@ -140,7 +138,7 @@ namespace TauriTSMAppDataFetcher
             {
                 using (var wc = new WebClient())
                 {
-                    wc.DownloadFile("https://tsm.topsoft4u.com/AppData.lua", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
+                    wc.DownloadFile("https://tsm.topsoft4u.com/get-tsm-appdata", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
             catch (Exception)

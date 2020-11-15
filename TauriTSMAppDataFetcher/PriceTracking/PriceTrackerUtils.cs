@@ -67,7 +67,7 @@ namespace TauriTSMAppDataFetcher.PriceTracking
                             lastNotify = DateTime.Now;
                         }
                     };
-                    wc.UploadStringAsync(new Uri("http://localhost:9876/check-prices"), "POST", json);
+                    wc.UploadStringAsync(new Uri("https://tsm.topsoft4u.com/check-prices"), "POST", json);
                 }
             }
             catch (Exception ex)
