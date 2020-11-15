@@ -1,24 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using TauriTSMAppDataFetcher.PriceTracking;
 using TauriTSMAppDataFetcher.Properties;
 
 namespace TauriTSMAppDataFetcher
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        private NotifyIcon trayIcon;
+        public static NotifyIcon TrayIcon;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
             // Initialize Tray Icon
-            trayIcon = new NotifyIcon
+            TrayIcon = new NotifyIcon
             {
                 Icon = Icon,
                 ContextMenu = new ContextMenu(new[] {
+                    new MenuItem("Price Alerts", TrayPriceAlerts),
+                    new MenuItem("Setup Price Alerts", TraySetupPriceAlerts),
+                    new MenuItem("-"),
                     new MenuItem("Set WoW directory", TraySetWoWDir),
                     new MenuItem("-"),
                     new MenuItem("Exit", Exit)
@@ -33,6 +40,22 @@ namespace TauriTSMAppDataFetcher
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             FetchAppData();
+
+            // TODO uncomment once the webservice is deployed
+            timerCheckPrices.Enabled = false;
+            // PriceTrackerUtils.PriceTrackerRequest();
+        }
+
+        private void TrayPriceAlerts(object sender, EventArgs e)
+        {
+            var form = new PriceTrackerListingForm();
+            form.Show();
+        }
+
+        private void TraySetupPriceAlerts(object sender, EventArgs e)
+        {
+            var form = new PriceTrackerSettingsForm();
+            form.Show();
         }
 
         private void SelectWoWDirectory(bool withClose = true)
@@ -58,7 +81,7 @@ namespace TauriTSMAppDataFetcher
             if (!Directory.Exists(Path.Combine(Settings.Default.WoWLocation, "Interface")))
                 SelectWoWDirectory();
             else
-                trayIcon.ShowBalloonTip(10000, "Valid WoW directory was selected", "Application can now run in background", ToolTipIcon.Info);
+                TrayIcon.ShowBalloonTip(10000, "Valid WoW directory was selected", "Application can now run in background", ToolTipIcon.Info);
         }
 
         // private void OnTrayDoubleClick(object sender, EventArgs e)
@@ -78,7 +101,7 @@ namespace TauriTSMAppDataFetcher
 
         private void Exit(object sender, EventArgs e)
         {
-            trayIcon.Visible = false;
+            TrayIcon.Visible = false;
             Application.Exit();
         }
         
@@ -97,9 +120,11 @@ namespace TauriTSMAppDataFetcher
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            trayIcon.Visible = false;
-            trayIcon.Icon = null;
+            TrayIcon.Visible = false;
+            TrayIcon.Icon = null;
         }
+
+        #region Fetch LUA
 
         private void timerFetch_Tick(object sender, EventArgs e)
         {
@@ -118,10 +143,18 @@ namespace TauriTSMAppDataFetcher
                     wc.DownloadFile("https://tsm.topsoft4u.com/AppData.lua", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show(e.Message);
+                // MessageBox.Show(e.Message);
             }
+        }
+        
+
+        #endregion
+        
+        private void timerCheckPrices_Tick(object sender, EventArgs e)
+        {
+            PriceTrackerUtils.PriceTrackerRequest();
         }
     }
 }

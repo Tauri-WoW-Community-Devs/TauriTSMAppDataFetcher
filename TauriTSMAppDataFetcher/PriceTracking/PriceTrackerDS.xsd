@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PriceTrackerDS" targetNamespace="http://tempuri.org/PriceTrackerDS.xsd" xmlns:mstns="http://tempuri.org/PriceTrackerDS.xsd" xmlns="http://tempuri.org/PriceTrackerDS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PriceTrackerDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PriceTrackerDS" msprop:Generator_UserDSName="PriceTrackerDS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="PriceTracker" msprop:Generator_TableClassName="PriceTrackerDataTable" msprop:Generator_TableVarName="tablePriceTracker" msprop:Generator_TablePropName="PriceTracker" msprop:Generator_RowDeletingName="PriceTrackerRowDeleting" msprop:Generator_RowChangingName="PriceTrackerRowChanging" msprop:Generator_RowEvHandlerName="PriceTrackerRowChangeEventHandler" msprop:Generator_RowDeletedName="PriceTrackerRowDeleted" msprop:Generator_UserTableName="PriceTracker" msprop:Generator_RowChangedName="PriceTrackerRowChanged" msprop:Generator_RowEvArgName="PriceTrackerRowChangeEvent" msprop:Generator_RowClassName="PriceTrackerRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ItemID" msdata:Caption="Item ID" msprop:nullValue="(Throw exception)n" msprop:Generator_ColumnPropNameInRow="ItemID" msprop:Generator_ColumnVarNameInTable="columnItemID" msprop:Generator_ColumnPropNameInTable="ItemIDColumn" msprop:Generator_UserColumnName="ItemID" type="xs:unsignedInt" />
+              <xs:element name="PriceCooper" msdata:Caption="Price (in cooper)" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PriceCooper" msprop:Generator_ColumnVarNameInTable="columnPriceCooper" msprop:Generator_ColumnPropNameInTable="PriceCooperColumn" msprop:Generator_UserColumnName="PriceCooper" type="xs:unsignedLong" />
+              <xs:element name="Comment" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Comment" msprop:Generator_ColumnVarNameInTable="columnComment" msprop:Generator_ColumnPropNameInTable="CommentColumn" msprop:Generator_UserColumnName="Comment" type="xs:string" minOccurs="0" />
+              <xs:element name="Faction" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Faction" msprop:Generator_ColumnVarNameInTable="columnFaction" msprop:Generator_ColumnPropNameInTable="FactionColumn" msprop:Generator_UserColumnName="Faction" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1">
+      <xs:selector xpath=".//mstns:PriceTracker" />
+      <xs:field xpath="mstns:ItemID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

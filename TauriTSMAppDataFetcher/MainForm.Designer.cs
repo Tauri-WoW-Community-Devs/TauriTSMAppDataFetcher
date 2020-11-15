@@ -1,6 +1,6 @@
 ﻿namespace TauriTSMAppDataFetcher
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.timerFetch = new System.Windows.Forms.Timer(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.timerCheckPrices = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // timerFetch
@@ -39,13 +41,29 @@
             this.timerFetch.Interval = 300000;
             this.timerFetch.Tick += new System.EventHandler(this.timerFetch_Tick);
             // 
-            // Form1
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(94, 26);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(170, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Item Price Alerts";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // timerCheckPrices
+            // 
+            this.timerCheckPrices.Enabled = true;
+            this.timerCheckPrices.Interval = 300000;
+            this.timerCheckPrices.Tick += new System.EventHandler(this.timerCheckPrices_Tick);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(354, 298);
+            this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tauri - TSM AppData Fetcher";
@@ -58,6 +76,8 @@
         #endregion
 
         private System.Windows.Forms.Timer timerFetch;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Timer timerCheckPrices;
     }
 }
 

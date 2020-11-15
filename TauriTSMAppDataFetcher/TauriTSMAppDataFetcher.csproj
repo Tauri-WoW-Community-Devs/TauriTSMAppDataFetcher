@@ -35,6 +35,9 @@
     <ApplicationIcon>apple-touch-icon-180x180.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,16 +51,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PriceTracking\PriceTrackerDS.cs">
+      <DependentUpon>PriceTrackerDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PriceTrackerDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerListingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerListingForm.Designer.cs">
+      <DependentUpon>PriceTrackerListingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerSettingsForm.Designer.cs">
+      <DependentUpon>PriceTrackerSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PriceTracking\PriceTrackerUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PriceTracking\PriceTrackerListingForm.resx">
+      <DependentUpon>PriceTrackerListingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PriceTracking\PriceTrackerSettingsForm.resx">
+      <DependentUpon>PriceTrackerSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -68,6 +99,19 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
+    <None Include="PriceTracking\PriceTrackerDS.xsc">
+      <DependentUpon>PriceTrackerDS.xsd</DependentUpon>
+    </None>
+    <None Include="PriceTracking\PriceTrackerDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PriceTrackerDS.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="PriceTracking\PriceTrackerDS.xss">
+      <DependentUpon>PriceTrackerDS.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\DataSources\TauriTSMAppDataFetcher.PriceTracking.PriceTrackerResponseItemList.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -84,5 +128,6 @@
   <ItemGroup>
     <Content Include="apple-touch-icon-180x180.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
