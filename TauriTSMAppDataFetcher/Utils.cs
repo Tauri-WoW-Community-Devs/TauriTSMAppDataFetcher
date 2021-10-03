@@ -10,16 +10,15 @@ namespace TauriTSMAppDataFetcher
     {
         public static string FormatGold(object value)
         {
-            ulong cooperVal;
-            if (!ulong.TryParse(value + "", out cooperVal))
+            if (!ulong.TryParse(value + "", out ulong cooperVal))
                 return value + "";
-            
-            var copper = cooperVal % 100;
-            cooperVal= (cooperVal - copper) / 100;
-            var silver = cooperVal % 100;
-            var gold = (cooperVal - silver) / 100;
 
-            var result = "";
+            ulong copper = cooperVal % 100;
+            cooperVal= (cooperVal - copper) / 100;
+            ulong silver = cooperVal % 100;
+            ulong gold = (cooperVal - silver) / 100;
+
+            string result = string.Empty;
             if (gold > 0)
                 result += gold + "g";
             if (silver > 0)

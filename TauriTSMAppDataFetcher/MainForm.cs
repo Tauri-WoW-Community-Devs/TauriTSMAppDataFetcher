@@ -32,7 +32,9 @@ namespace TauriTSMAppDataFetcher
                 }),
                 Visible = true
             };
-            
+
+            TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
+
             if (Settings.Default.WoWLocation + "" == "")
                 SelectWoWDirectory();
             else
@@ -40,8 +42,14 @@ namespace TauriTSMAppDataFetcher
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             FetchAppData();
-            
+
             PriceTrackerUtils.PriceTrackerRequest();
+        }
+
+        private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void TrayPriceAlerts(object sender, EventArgs e)
@@ -66,7 +74,7 @@ namespace TauriTSMAppDataFetcher
                 else
                     return;
             }
-            
+
             Settings.Default.WoWLocation = dir;
             Settings.Default.Save();
 
@@ -102,10 +110,10 @@ namespace TauriTSMAppDataFetcher
             TrayIcon.Visible = false;
             Application.Exit();
         }
-        
+
         private string SelectDirectory(string caption)
         {
-            using(var fbd = new FolderBrowserDialog())
+            using (var fbd = new FolderBrowserDialog())
             {
                 fbd.Description = caption;
                 var result = fbd.ShowDialog();
@@ -146,13 +154,27 @@ namespace TauriTSMAppDataFetcher
                 // MessageBox.Show(e.Message);
             }
         }
-        
+
 
         #endregion
-        
+
         private void timerCheckPrices_Tick(object sender, EventArgs e)
         {
             PriceTrackerUtils.PriceTrackerRequest();
+        }
+
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                TrayIcon.Visible = true;
+                ShowInTaskbar = false;
+            }
+            else if (this.WindowState == FormWindowState.Normal || this.WindowState  == FormWindowState.Maximized)
+            {
+                ShowInTaskbar = true;
+            }
         }
     }
 }
