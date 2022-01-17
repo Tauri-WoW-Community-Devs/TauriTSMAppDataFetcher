@@ -35,13 +35,18 @@ namespace TauriTSMAppDataFetcher
 
             TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
 
-            if (Settings.Default.WoWLocation + "" == "")
+            if (string.IsNullOrEmpty(Settings.Default.WoWLocation))
                 SelectWoWDirectory();
             else
                 ValidateWoWDirectory();
 
+
+            IsStormforgeCheckbox.Checked = Settings.Default.IsStormforge;
+
+            if (!Settings.Default.IsStormforge) FetchAppData();
+
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            FetchAppData();
 
             PriceTrackerUtils.PriceTrackerRequest();
         }
@@ -146,12 +151,12 @@ namespace TauriTSMAppDataFetcher
             {
                 using (var wc = new WebClient())
                 {
-                    wc.DownloadFile("https://tsm.topsoft4u.com/get-tsm-appdata", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
+                    wc.DownloadFile($"https://tsm.topsoft4u.com/get-tsm-appdata?isStormforge={(Settings.Default.IsStormforge ? 1 : 0)}", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
             catch (Exception)
             {
-                // MessageBox.Show(e.Message);
+                MessageBox.Show(Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB") + " folder not found. Please install TSM");
             }
         }
 
@@ -171,9 +176,23 @@ namespace TauriTSMAppDataFetcher
                 TrayIcon.Visible = true;
                 ShowInTaskbar = false;
             }
-            else if (this.WindowState == FormWindowState.Normal || this.WindowState  == FormWindowState.Maximized)
+            else if (this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
             {
                 ShowInTaskbar = true;
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.IsStormforge = IsStormforgeCheckbox.Checked;
+
+            Settings.Default.Save();
+
+            File.WriteAllText(AppContext.BaseDirectory + "/settings.tsm", IsStormforgeCheckbox.Checked.ToString());
+
+            if (Settings.Default.IsStormforge)
+            {
+                FetchAppData();
             }
         }
     }

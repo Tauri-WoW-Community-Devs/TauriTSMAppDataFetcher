@@ -33,6 +33,7 @@
             this.timerFetch = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.timerCheckPrices = new System.Windows.Forms.Timer(this.components);
+            this.IsStormforgeCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // timerFetch
@@ -56,11 +57,24 @@
             this.timerCheckPrices.Interval = 300000;
             this.timerCheckPrices.Tick += new System.EventHandler(this.timerCheckPrices_Tick);
             // 
+            // IsStormforgeCheckbox
+            // 
+            this.IsStormforgeCheckbox.AutoSize = true;
+            this.IsStormforgeCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IsStormforgeCheckbox.Location = new System.Drawing.Point(68, 55);
+            this.IsStormforgeCheckbox.Name = "IsStormforgeCheckbox";
+            this.IsStormforgeCheckbox.Size = new System.Drawing.Size(217, 28);
+            this.IsStormforgeCheckbox.TabIndex = 1;
+            this.IsStormforgeCheckbox.Text = "Connect to Stormforge";
+            this.IsStormforgeCheckbox.UseVisualStyleBackColor = true;
+            this.IsStormforgeCheckbox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(354, 298);
+            this.Controls.Add(this.IsStormforgeCheckbox);
             this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -71,6 +85,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -79,6 +94,7 @@
         private System.Windows.Forms.Timer timerFetch;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Timer timerCheckPrices;
+        private System.Windows.Forms.CheckBox IsStormforgeCheckbox;
     }
 }
 
