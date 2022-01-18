@@ -49,7 +49,7 @@ namespace TauriTSMAppDataFetcher
             serverSelectorCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
 
-   
+
 
             //FetchAppData();
 
@@ -225,6 +225,11 @@ namespace TauriTSMAppDataFetcher
 
                 FetchAppData();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TrayPriceAlerts(sender, e);
         }
     }
 }
