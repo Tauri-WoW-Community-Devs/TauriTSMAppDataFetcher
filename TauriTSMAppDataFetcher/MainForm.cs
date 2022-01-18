@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 using TauriTSMAppDataFetcher.PriceTracking;
 using TauriTSMAppDataFetcher.Properties;
 
@@ -33,7 +31,6 @@ namespace TauriTSMAppDataFetcher
                 Visible = true
             };
 
-            TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
 
             if (string.IsNullOrEmpty(Settings.Default.WoWLocation))
                 SelectWoWDirectory();
@@ -41,9 +38,20 @@ namespace TauriTSMAppDataFetcher
                 ValidateWoWDirectory();
 
 
-            IsStormforgeCheckbox.Checked = Settings.Default.IsStormforge;
+            foreach (var item in Enum.GetValues(typeof(Servers)).Cast<Servers>())
+            {
+                serverSelectorCombo.Items.Add(item);
+            }
 
-            if (!Settings.Default.IsStormforge) FetchAppData();
+            serverSelectorCombo.DropDownWidth = serverSelectorCombo.Width;
+
+            serverSelectorCombo.SelectedItem = (Servers)Settings.Default.SelectedServer;
+            serverSelectorCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+            TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
+
+   
+
+            //FetchAppData();
 
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -149,9 +157,33 @@ namespace TauriTSMAppDataFetcher
 
             try
             {
+                string baseUrl = "https://tsm.topsoft4u.com/get-tsm-appdata?realms[tauri]={0}&realms[mistblade]={1}";
+                string calculatedUrl = null;
+                Servers selectedRealm = (Servers)Settings.Default.SelectedServer;
+                switch (selectedRealm)
+                {
+                    case Servers.Both:
+                        calculatedUrl = string.Format(baseUrl, 1, 1);
+                        break;
+                    case Servers.Tauri:
+                        calculatedUrl = string.Format(baseUrl, 1, 0);
+                        break;
+                    case Servers.Stormforge:
+                        calculatedUrl = string.Format(baseUrl, 0, 1);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (string.IsNullOrEmpty(calculatedUrl))
+                {
+                    MessageBox.Show("Choose a server to get the data from");
+                    return;
+                }
+
                 using (var wc = new WebClient())
                 {
-                    wc.DownloadFile($"https://tsm.topsoft4u.com/get-tsm-appdata?isStormforge={(Settings.Default.IsStormforge ? 1 : 0)}", Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
+                    wc.DownloadFile(string.Format(calculatedUrl), Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
             catch (Exception)
@@ -182,16 +214,15 @@ namespace TauriTSMAppDataFetcher
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void serverSelectorCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.Default.IsStormforge = IsStormforgeCheckbox.Checked;
+            int selectedItem = (int)((Servers)serverSelectorCombo.SelectedItem);
 
-            Settings.Default.Save();
-
-            File.WriteAllText(AppContext.BaseDirectory + "/settings.tsm", IsStormforgeCheckbox.Checked.ToString());
-
-            if (Settings.Default.IsStormforge)
+            if (Settings.Default.SelectedServer != selectedItem)
             {
+                Settings.Default.SelectedServer = selectedItem;
+                Settings.Default.Save();
+
                 FetchAppData();
             }
         }

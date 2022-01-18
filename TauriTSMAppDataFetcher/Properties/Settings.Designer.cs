@@ -49,13 +49,13 @@ namespace TauriTSMAppDataFetcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsStormforge {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedServer {
             get {
-                return ((bool)(this["IsStormforge"]));
+                return ((int)(this["SelectedServer"]));
             }
             set {
-                this["IsStormforge"] = value;
+                this["SelectedServer"] = value;
             }
         }
     }
