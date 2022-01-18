@@ -12,6 +12,19 @@ namespace TauriTSMAppDataFetcher
     {
         public static NotifyIcon TrayIcon;
 
+        /// <summary>
+        /// Hides app from alt tab
+        /// </summary>
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams pm = base.CreateParams;
+                pm.ExStyle |= 0x80;
+                return pm;
+            }
+        } 
+
         public MainForm()
         {
             InitializeComponent();
@@ -49,10 +62,7 @@ namespace TauriTSMAppDataFetcher
             serverSelectorCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
 
-
-
             //FetchAppData();
-
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
