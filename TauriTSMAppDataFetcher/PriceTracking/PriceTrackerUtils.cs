@@ -67,7 +67,27 @@ namespace TauriTSMAppDataFetcher.PriceTracking
                             lastNotify = DateTime.Now;
                         }
                     };
-                    wc.UploadStringAsync(new Uri("https://tsm.topsoft4u.com/check-prices"), "POST", json);
+                     
+                    string baseUrl = "https://tsm.topsoft4u.com/check-prices?realms[tauri]={0}&realms[mistblade]={1}";
+                    string calculatedUrl = null;
+                    Servers selectedRealm = (Servers)Settings.Default.SelectedServer;
+                    switch (selectedRealm)
+                    {
+                        case Servers.Both:
+                            MessageBox.Show("You cannot track items for both realms");
+                            return;
+                        case Servers.Tauri:
+                            calculatedUrl = string.Format(baseUrl, 1, 0);
+                            break;
+                        case Servers.Stormforge:
+                            calculatedUrl = string.Format(baseUrl, 0, 1);
+                            break;
+                        default:
+                            break;
+                    }
+
+
+                    wc.UploadStringAsync(new Uri(calculatedUrl), "POST", json);
                 }
             }
             catch (Exception ex)
