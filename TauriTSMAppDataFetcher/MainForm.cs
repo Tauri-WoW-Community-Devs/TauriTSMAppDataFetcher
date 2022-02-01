@@ -64,6 +64,7 @@ namespace TauriTSMAppDataFetcher
 
             FetchAppData();
 
+            ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             PriceTrackerUtils.PriceTrackerRequest();
