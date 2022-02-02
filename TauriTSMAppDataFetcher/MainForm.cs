@@ -12,12 +12,12 @@ namespace TauriTSMAppDataFetcher
     public partial class MainForm : Form
     {
         public static NotifyIcon TrayIcon;
-        
+
         private const int WM_SYSCOMMAND = 0x0112;
         private const int SC_MINIMIZE = 0xF020;
+ 
 
-        [SecurityPermission(SecurityAction.LinkDemand,
-                            Flags = SecurityPermissionFlag.UnmanagedCode)]
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -26,17 +26,36 @@ namespace TauriTSMAppDataFetcher
                     int command = m.WParam.ToInt32();
                     if (command == SC_MINIMIZE)
                     {
-                        PerformYourOwnOperation();  // For example
+                        HideForm();  // For example
+                    }
+                    else
+                    {
+                        if(WindowState != FormWindowState.Normal || WindowState != FormWindowState.Maximized)
+                            ShowForm();
                     }
                     break;
             }
             base.WndProc(ref m);
         }
 
-        public void PerformYourOwnOperation()
+        public void HideForm()
         {
-            Hide();
-            ShowInTaskbar = true;
+            Hide(); 
+            this.Visible = false;
+            this.Opacity = 0;
+            this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            this.ShowInTaskbar = false;
+            TrayIcon.Visible = true;
+        }
+        
+        public void ShowForm()
+        {
+            Show();
+            TrayIcon.Visible = false;
+            this.Visible = true;
+            this.Opacity = 100;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; //or whatever it was previously set to
+            this.ShowInTaskbar = true;
         }
 
         public MainForm()
@@ -58,6 +77,7 @@ namespace TauriTSMAppDataFetcher
                 Visible = true
             };
 
+            MinimizeBox = true;
 
             if (string.IsNullOrEmpty(Settings.Default.WoWLocation))
                 SelectWoWDirectory();
@@ -82,12 +102,13 @@ namespace TauriTSMAppDataFetcher
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             PriceTrackerUtils.PriceTrackerRequest();
+
+            HideForm();
         }
 
         private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Show();
-            this.WindowState = FormWindowState.Normal;
+            ShowForm();
         }
 
         private void TrayPriceAlerts(object sender, EventArgs e)
