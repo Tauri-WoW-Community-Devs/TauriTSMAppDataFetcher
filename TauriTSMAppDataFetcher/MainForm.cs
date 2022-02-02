@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Permissions;
 using System.Windows.Forms;
 using TauriTSMAppDataFetcher.PriceTracking;
 using TauriTSMAppDataFetcher.Properties;
@@ -11,19 +12,32 @@ namespace TauriTSMAppDataFetcher
     public partial class MainForm : Form
     {
         public static NotifyIcon TrayIcon;
+        
+        private const int WM_SYSCOMMAND = 0x0112;
+        private const int SC_MINIMIZE = 0xF020;
 
-        /// <summary>
-        /// Hides app from alt tab
-        /// </summary>
-        protected override CreateParams CreateParams
+        [SecurityPermission(SecurityAction.LinkDemand,
+                            Flags = SecurityPermissionFlag.UnmanagedCode)]
+        protected override void WndProc(ref Message m)
         {
-            get
+            switch (m.Msg)
             {
-                CreateParams pm = base.CreateParams;
-                pm.ExStyle |= 0x80;
-                return pm;
+                case WM_SYSCOMMAND:
+                    int command = m.WParam.ToInt32();
+                    if (command == SC_MINIMIZE)
+                    {
+                        PerformYourOwnOperation();  // For example
+                    }
+                    break;
             }
-        } 
+            base.WndProc(ref m);
+        }
+
+        public void PerformYourOwnOperation()
+        {
+            Hide();
+            ShowInTaskbar = true;
+        }
 
         public MainForm()
         {
@@ -113,16 +127,6 @@ namespace TauriTSMAppDataFetcher
                 TrayIcon.ShowBalloonTip(10000, "Valid WoW directory was selected", "Application can now run in background", ToolTipIcon.Info);
         }
 
-        // private void OnTrayDoubleClick(object sender, EventArgs e)
-        // {
-        //     trayIcon.Visible = false;
-        //     
-        //     if (WindowState == FormWindowState.Minimized)
-        //         WindowState = FormWindowState.Normal;
-        //
-        //     Activate();
-        // }
-
         private void TraySetWoWDir(object sender, EventArgs e)
         {
             SelectWoWDirectory(false);
@@ -208,20 +212,6 @@ namespace TauriTSMAppDataFetcher
         private void timerCheckPrices_Tick(object sender, EventArgs e)
         {
             PriceTrackerUtils.PriceTrackerRequest();
-        }
-
-        private void MainForm_ResizeEnd(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                Hide();
-                TrayIcon.Visible = true;
-                ShowInTaskbar = false;
-            }
-            else if (this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
-            {
-                ShowInTaskbar = true;
-            }
         }
 
         private void serverSelectorCombo_SelectedIndexChanged(object sender, EventArgs e)
