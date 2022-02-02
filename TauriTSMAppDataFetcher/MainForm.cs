@@ -76,8 +76,9 @@ namespace TauriTSMAppDataFetcher
             serverSelectorCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             TrayIcon.MouseDoubleClick += TrayIcon_MouseDoubleClick;
 
-            //FetchAppData();
+            FetchAppData();
 
+            ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             PriceTrackerUtils.PriceTrackerRequest();
@@ -169,6 +170,20 @@ namespace TauriTSMAppDataFetcher
             if (Settings.Default.WoWLocation + "" == "")
                 return;
 
+
+            string folderPath = Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB");
+            try
+            {
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+            }
+            catch
+            {
+                MessageBox.Show($"Unable to create path {folderPath}. Try to run this app as admin.");
+                return;
+            }
             try
             {
                 string baseUrl = "https://tsm.topsoft4u.com/get-tsm-appdata?realms[tauri]={0}&realms[mistblade]={1}";
@@ -200,9 +215,9 @@ namespace TauriTSMAppDataFetcher
                     wc.DownloadFile(string.Format(calculatedUrl), Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB") + " folder not found. Please install TSM");
+                MessageBox.Show(ex.Message);
             }
         }
 
