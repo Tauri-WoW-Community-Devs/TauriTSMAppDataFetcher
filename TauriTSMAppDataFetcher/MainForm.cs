@@ -207,19 +207,19 @@ namespace TauriTSMAppDataFetcher
             }
             try
             {
-                string baseUrl = "https://tsm.topsoft4u.com/get-tsm-appdata?realms[tauri]={0}&realms[mistblade]={1}";
+                string baseUrl = "https://tsm.topsoft4u.com/get-tsm-appdata?realms[tauri]={0}&realms[mistblade]={1}&realms[mistbladeS2]={2}";
                 string calculatedUrl = null;
                 Servers selectedRealm = (Servers)Settings.Default.SelectedServer;
                 switch (selectedRealm)
                 {
                     case Servers.Both:
-                        calculatedUrl = string.Format(baseUrl, 1, 1);
+                        calculatedUrl = string.Format(baseUrl, 1, 1, 1);
                         break;
                     case Servers.Tauri:
-                        calculatedUrl = string.Format(baseUrl, 1, 0);
+                        calculatedUrl = string.Format(baseUrl, 1, 0, 0);
                         break;
                     case Servers.Stormforge:
-                        calculatedUrl = string.Format(baseUrl, 0, 1);
+                        calculatedUrl = string.Format(baseUrl, 0, 1, 1);
                         break;
                     default:
                         break;
