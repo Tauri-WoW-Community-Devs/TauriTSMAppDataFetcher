@@ -11,5 +11,8 @@
     <Setting Name="SelectedServer" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Endpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://tsm.topsoft4u.com</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,7 +16,7 @@ namespace TauriTSMAppDataFetcher
 
         private const int WM_SYSCOMMAND = 0x0112;
         private const int SC_MINIMIZE = 0xF020;
- 
+
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void WndProc(ref Message m)
@@ -30,7 +31,7 @@ namespace TauriTSMAppDataFetcher
                     }
                     else
                     {
-                        if(WindowState != FormWindowState.Normal || WindowState != FormWindowState.Maximized)
+                        if (WindowState != FormWindowState.Normal || WindowState != FormWindowState.Maximized)
                             ShowForm();
                     }
                     break;
@@ -40,14 +41,14 @@ namespace TauriTSMAppDataFetcher
 
         public void HideForm()
         {
-            Hide(); 
+            Hide();
             this.Visible = false;
             this.Opacity = 0;
             this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             this.ShowInTaskbar = false;
             TrayIcon.Visible = true;
         }
-        
+
         public void ShowForm()
         {
             Show();
@@ -61,6 +62,12 @@ namespace TauriTSMAppDataFetcher
         public MainForm()
         {
             InitializeComponent();
+
+            var apiUrl = Settings.Default.Endpoint;
+
+
+            if (string.IsNullOrEmpty(apiUrl))
+                throw new ArgumentNullException(nameof(apiUrl), "cannot be empty");
 
             // Initialize Tray Icon
             TrayIcon = new NotifyIcon
@@ -207,19 +214,21 @@ namespace TauriTSMAppDataFetcher
             }
             try
             {
-                string baseUrl = "https://tsm.topsoft4u.com/get-tsm-appdata?realms[tauri]={0}&realms[mistblade]={1}&realms[sheilun]={2}";
-                string calculatedUrl = null;
+                var apiUrl = Settings.Default.Endpoint;
+                UriBuilder builder = new UriBuilder(apiUrl);
+                builder.Path = "/get-tsm-appdata";
+                string calculatedUrl = "realms[tauri]={0}&realms[mistblade]={1}&realms[sheilun]={2}";
                 Servers selectedRealm = (Servers)Settings.Default.SelectedServer;
                 switch (selectedRealm)
                 {
                     case Servers.Both:
-                        calculatedUrl = string.Format(baseUrl, 1, 1, 1);
+                        calculatedUrl = string.Format(calculatedUrl, 1, 1, 1);
                         break;
                     case Servers.Tauri:
-                        calculatedUrl = string.Format(baseUrl, 1, 0, 0);
+                        calculatedUrl = string.Format(calculatedUrl, 1, 0, 0);
                         break;
                     case Servers.Stormforge:
-                        calculatedUrl = string.Format(baseUrl, 0, 1, 1);
+                        calculatedUrl = string.Format(calculatedUrl, 0, 1, 1);
                         break;
                     default:
                         break;
@@ -231,9 +240,11 @@ namespace TauriTSMAppDataFetcher
                     return;
                 }
 
+                builder.Query = calculatedUrl;
+
                 using (var wc = new WebClient())
                 {
-                    wc.DownloadFile(string.Format(calculatedUrl), Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
+                    wc.DownloadFile(builder.Uri, Path.Combine(Settings.Default.WoWLocation, "Interface", "AddOns", "TradeSkillMaster_AuctionDB", "AppData.lua"));
                 }
             }
             catch (Exception ex)
